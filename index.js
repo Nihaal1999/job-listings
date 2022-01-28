@@ -1,8 +1,13 @@
-const domElement = {
-  jobContainer: document.querySelector('#jobs'),
-}
+const jobContainer = document.getElementById('jobs')
 // get all jobs data
 const getJobs = async () => await (await fetch('./data.json')).json()
+
+const KEY = '__jl__.'
+const FILTER_KEY = KEY + 'filters'
+
+const filterState = JSON.parse(window.localStorage.getItem(FILTER_KEY)) ?? []
+
+console.log(filterState)
 
 // create job card
 const createJobCard = () => {
@@ -20,21 +25,51 @@ const createJobCard = () => {
           </div>
           <h3 class="title">${job.position}</h3>
           <div class="detailsBox">
-            <p class="time">${job.postedAt}</p>
-            <span class="type">${job.contract}</span>
-            <span class="location">${job.location}</span>
+            <div class="time">${job.postedAt}</div>
+            <div>•</div>
+            <div class="type">${job.contract}</div>
+            <div>•</div>
+            <div class="location">${job.location}</div>
           </div>
         </div>
       </div>
       <div class="filters">
-       <div class="filter">${job.role}</div>
-      ${job.tools.map(tool => `<div class="filter">${tool}</div>`)}
-      ${job.languages.map(lang => `<div class="filter">${lang}</div>`)}
+      ${createFilters({
+        role: job.role,
+        tools: job.tools,
+        languages: job.languages,
+      })}
       </div>
     </div>`
     }
-    domElement.jobContainer.innerHTML = cardTemplate
+    // console.log(cardTemplate)
+    jobContainer.innerHTML = cardTemplate
   })
 }
 
+const createFilters = ({role, tools, languages}) => {
+  return `<div class="filter" onclick="handleAddFilter(this)">${role}</div>
+  ${tools.map(tool => `<div class="filter">${tool}</div>`).join('')}
+  ${languages.map(lang => `<div class="filter">${lang}</div>`).join('')}
+  </div>`
+}
+
 createJobCard()
+
+// const filters = document.querySelectorAll('.filter')
+// console.log(filters)
+
+// filters.forEach(filter => {
+//   filter.addEventListener('click', function () {
+//     console.log({filter})
+//   })
+// })
+
+function handleAddFilter(e) {
+  const value = e.textContent
+  if (!filterState.includes(value)) {
+    filterState.push(value)
+  }
+  console.log(filterState)
+  window.localStorage.setItem(FILTER_KEY, JSON.stringify(filterState))
+}
