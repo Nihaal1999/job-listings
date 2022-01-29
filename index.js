@@ -132,7 +132,6 @@ const createSelectedFilters = () => {
 
 createSelectedFilters()
 
-// createSelectedFilters()
 const handleRemoveFilter = (e, shouldRemoveAll) => {
   if (shouldRemoveAll) {
     filterState.splice(0, filterState.length)

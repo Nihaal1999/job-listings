@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Spartan:wght@500;700&display=swap');
 
+/* css variables */
 :root {
   --header: #5ca5a5;
   --primary: hsl(180, 52%, 96%);
