@@ -19,7 +19,7 @@ const createJobCard = () => {
       }
       cardTemplate += `<div class="job ${job.featured ? 'leftBorder' : ''}">
       <div class="leftFlex">
-        <img src=${job.logo} alt=${job.company + ' image'} class="jobImage" />
+        <img src=${job.logo} alt=${job.company} class="jobImage" />
         <div class="info">
           <div class="companyBox">
             <h4 class="companyName">${job.company}</h4>
