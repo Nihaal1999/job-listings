@@ -135,17 +135,8 @@ const handleRemoveFilter = (e, shouldRemoveAll) => {
 }
 
 const checkFilterCondition = job => {
-  const hasRole = filterState.some(el => el.value === job.role)
-  const hasLanguage = filterState.some(el => {
-    if (el.type !== 'lang') return false
-    return job.languages.includes(el.value)
-  })
-  const hasTool = filterState.some(el => {
-    if (el.type !== 'tool') return false
-    return job.tools.includes(el.value)
-  })
+  let filterKind = '' // * role+ || role+lang+ || role+lang+tool+ || lang+tool+ || lang+ || tool+
 
-  let filterKind = '' //role+ || role+lang+ || role+lang+tool+ || lang+tool+ || lang+ || tool+
   filterState.forEach(state => {
     if (state.type === 'role') {
       if (!filterKind.includes('role')) filterKind += 'role+'
@@ -162,23 +153,22 @@ const checkFilterCondition = job => {
 
   switch (filterKind) {
     case 'role+':
-      filterCondition = hasRole
+      filterCondition = hasRoleFn(job)
       break
     case 'lang+':
-      filterCondition = hasLanguage
+      filterCondition = hasLangFn(job, filterKind)
       break
     case 'tool+':
-      filterCondition = hasTool
+      filterCondition = hasToolFn(job, filterKind)
       break
     case 'role+lang+' || 'lang+role+':
-      // console.log(job, hasRole, hasLanguage)
-      filterCondition = hasRole && hasLanguage
+      filterCondition = hasRoleFn(job) && hasLangFn(job, filterKind)
       break
     case 'role+tool+' || 'tool+role+':
-      filterCondition = hasRole && hasTool
+      filterCondition = hasRoleFn(job) && hasToolFn(job, filterKind)
       break
     case 'tool+lang+' || 'lang+tool+':
-      filterCondition = hasTool && hasLanguage
+      filterCondition = hasToolFn(job, filterKind) && hasLangFn(job, filterKind)
       break
     case 'role+lang+tool+' ||
       'lang+role+tool+' ||
@@ -186,14 +176,24 @@ const checkFilterCondition = job => {
       'role+tool+lang+' ||
       'tool+lang+role+' ||
       'tool+role+lang+':
-      filterCondition = hasRole && hasLanguage && hasTool
+      filterCondition =
+        hasRoleFn(job) &&
+        hasLangFn(job, filterKind) &&
+        hasToolFn(job, filterKind)
       break
   }
 
-  console.log(filterKind, filterCondition)
-
-  // const filterCondition = hasRole || hasLanguage || hasTool
-
-  // console.log(!filterCondition)
   return filterCondition
 }
+
+const hasLangFn = (job, filterKind) =>
+  filterKind === 'lang+'
+    ? filterState.every(el => job.languages.includes(el.value))
+    : filterState.some(el => job.languages.includes(el.value))
+
+const hasToolFn = (job, filterKind) =>
+  filterKind === 'tool+'
+    ? filterState.every(el => job.tools.includes(el.value))
+    : filterState.some(el => job.tools.includes(el.value))
+
+const hasRoleFn = job => filterState.some(el => el.value === job.role)
