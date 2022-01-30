@@ -90,6 +90,7 @@ body {
 
 .companyName {
   color: var(--header);
+  font-size: 14px;
 }
 
 .newTag {
