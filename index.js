@@ -12,26 +12,9 @@ const filterState = JSON.parse(window.localStorage.getItem(FILTER_KEY)) ?? []
 const createJobCard = () => {
   getJobs().then(jobs => {
     let cardTemplate = ``
-    for (job of jobs) {
+    for (let job of jobs) {
       if (filterState.length) {
-        console.log(
-          job,
-          filterState,
-          'role',
-          filterState.includes(job.role),
-          'lang',
-          filterState.some(el => job.languages.indexOf(el) >= 0),
-          'tools',
-          filterState.some(el => job.tools.indexOf(el) >= 0),
-        )
-        const hasRole = filterState.includes(job.role)
-        const hasLanguage = filterState.some(
-          el => job.languages.indexOf(el) >= 0,
-        )
-        const hasTool = filterState.some(el => job.tools.indexOf(el) >= 0)
-        const filterCondition = hasRole || hasLanguage || hasTool
-
-        console.log(!filterCondition)
+        const filterCondition = checkFilterCondition(job)
         if (!filterCondition) continue
       }
       cardTemplate += `<div class="job ${job.featured ? 'leftBorder' : ''}">
@@ -68,17 +51,17 @@ const createJobCard = () => {
 }
 
 const createFilters = ({role, tools, languages}) => {
-  return `<div class="filter" onclick="handleAddFilter(this)">${role}</div>
+  return `<div class="filter" onclick="handleAddFilter(this,'role')">${role}</div>
   ${tools
     .map(
       tool =>
-        `<div class="filter" onclick="handleAddFilter(this)">${tool}</div>`,
+        `<div class="filter" onclick="handleAddFilter(this,'tool')">${tool}</div>`,
     )
     .join('')}
   ${languages
     .map(
       lang =>
-        `<div class="filter" onclick="handleAddFilter(this)">${lang}</div>`,
+        `<div class="filter" onclick="handleAddFilter(this,'lang')">${lang}</div>`,
     )
     .join('')}
   </div>`
@@ -86,16 +69,7 @@ const createFilters = ({role, tools, languages}) => {
 
 createJobCard()
 
-const handleAddFilter = e => {
-  const value = e.textContent
-  if (!filterState.includes(value)) {
-    filterState.push(value)
-  }
-  createSelectedFilters()
-  createJobCard()
-  updateLocalStorage()
-}
-
+//local storage
 const updateLocalStorage = () => {
   window.localStorage.setItem(FILTER_KEY, JSON.stringify(filterState))
 }
@@ -111,7 +85,7 @@ const createSelectedFilters = () => {
   ${filterState
     .map(
       filter => `<div class="selectedFilterWrapper">
-  <div class="selectedFilter">${filter}</div>
+  <div class="selectedFilter">${filter.value}</div>
   <div class="removeIconBox" onclick="handleRemoveFilter(this)">
     <img
       src="./images/icon-remove.svg"
@@ -132,13 +106,94 @@ const createSelectedFilters = () => {
 
 createSelectedFilters()
 
-const handleRemoveFilter = (e, shouldRemoveAll) => {
-  if (shouldRemoveAll) {
-    filterState.splice(0, filterState.length)
-  } else {
-    filterState.splice(filterState.indexOf(e.textContent), 1)
+// event handlers
+const handleAddFilter = (e, type) => {
+  const state = {
+    value: e.textContent,
+    type,
+  }
+  if (!filterState.some(obj => obj.value === e.textContent)) {
+    filterState.push(state)
   }
   createSelectedFilters()
   createJobCard()
   updateLocalStorage()
+}
+
+const handleRemoveFilter = (e, shouldRemoveAll) => {
+  if (shouldRemoveAll) {
+    filterState.splice(0, filterState.length)
+  } else {
+    filterState.splice(
+      filterState.findIndex(el => el.value === e.textContent),
+      1,
+    )
+  }
+  createSelectedFilters()
+  createJobCard()
+  updateLocalStorage()
+}
+
+const checkFilterCondition = job => {
+  const hasRole = filterState.some(el => el.value === job.role)
+  const hasLanguage = filterState.some(el => {
+    if (el.type !== 'lang') return false
+    return job.languages.includes(el.value)
+  })
+  const hasTool = filterState.some(el => {
+    if (el.type !== 'tool') return false
+    return job.tools.includes(el.value)
+  })
+
+  let filterKind = '' //role+ || role+lang+ || role+lang+tool+ || lang+tool+ || lang+ || tool+
+  filterState.forEach(state => {
+    if (state.type === 'role') {
+      if (!filterKind.includes('role')) filterKind += 'role+'
+    }
+    if (state.type === 'tool') {
+      if (!filterKind.includes('tool')) filterKind += 'tool+'
+    }
+    if (state.type === 'lang') {
+      if (!filterKind.includes('lang')) filterKind += 'lang+'
+    }
+  })
+
+  let filterCondition = null
+
+  switch (filterKind) {
+    case 'role+':
+      filterCondition = hasRole
+      break
+    case 'lang+':
+      filterCondition = hasLanguage
+      break
+    case 'tool+':
+      filterCondition = hasTool
+      break
+    case 'role+lang+' || 'lang+role+':
+      // console.log(job, hasRole, hasLanguage)
+      filterCondition = hasRole && hasLanguage
+      break
+    case 'role+tool+' || 'tool+role+':
+      filterCondition = hasRole && hasTool
+      break
+    case 'tool+lang+' || 'lang+tool+':
+      filterCondition = hasTool && hasLanguage
+      break
+    case 'role+lang+tool+' ||
+      'lang+role+tool+' ||
+      'lang+tool+role+' ||
+      'role+tool+lang+' ||
+      'tool+lang+role+' ||
+      'tool+role+lang+':
+      filterCondition = hasRole && hasLanguage && hasTool
+      break
+  }
+
+  console.log(filterKind, filterCondition)
+
+  // const filterCondition = hasRole || hasLanguage || hasTool
+
+  // console.log(!filterCondition)
+  return filterCondition
 }

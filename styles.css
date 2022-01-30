@@ -60,8 +60,8 @@ body {
 }
 
 .job {
-  width: 1110px;
-  height: 152px;
+  max-width: 1110px;
+  width: 85%;
   margin: 0 auto;
   display: flex;
   padding: 32px 40px;
@@ -215,4 +215,10 @@ body {
 
 .leftBorder {
   border-left: solid 5px var(--header);
+}
+
+@media (max-width: 1005px) {
+  .job {
+    flex-direction: column;
+  }
 }
