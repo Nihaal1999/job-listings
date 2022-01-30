@@ -86,7 +86,7 @@ const createSelectedFilters = () => {
     .map(
       filter => `<div class="selectedFilterWrapper">
   <div class="selectedFilter">${filter.value}</div>
-  <div class="removeIconBox" onclick="handleRemoveFilter(this)">
+  <div class="removeIconBox" onclick="handleRemoveFilter('${filter.value}')">
     <img
       src="./images/icon-remove.svg"
       alt="remove filter"
@@ -99,7 +99,7 @@ const createSelectedFilters = () => {
     )
     .join('')}
 </div>
-<button class="clearBtn" onclick="handleRemoveFilter(this,true)">Clear</button>`
+<button class="clearBtn" onclick="handleRemoveFilter(all,true)">Clear</button>`
 
   selectedFiltersContainer.innerHTML = template
 }
@@ -120,12 +120,12 @@ const handleAddFilter = (e, type) => {
   updateLocalStorage()
 }
 
-const handleRemoveFilter = (e, shouldRemoveAll) => {
+const handleRemoveFilter = (value, shouldRemoveAll) => {
   if (shouldRemoveAll) {
     filterState.splice(0, filterState.length)
   } else {
     filterState.splice(
-      filterState.findIndex(el => el.value === e.textContent),
+      filterState.findIndex(el => el.value === value),
       1,
     )
   }
