@@ -44,6 +44,7 @@ body {
   gap: 24px;
   padding: 76px 0;
   background-color: var(--primary);
+  height: 100%;
 }
 
 .leftFlex {
@@ -179,6 +180,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  animation: 5s ease-in;
 }
 
 .job,
@@ -211,6 +213,7 @@ body {
 
 .hide {
   visibility: hidden;
+  transition: visibility 0s linear 300ms, opacity 300ms;
 }
 
 .leftBorder {

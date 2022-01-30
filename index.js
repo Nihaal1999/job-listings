@@ -186,14 +186,13 @@ const checkFilterCondition = job => {
   return filterCondition
 }
 
-const hasLangFn = (job, filterKind) =>
-  filterKind === 'lang+'
-    ? filterState.every(el => job.languages.includes(el.value))
-    : filterState.some(el => job.languages.includes(el.value))
+const hasLangFn = job =>
+  filterState.every(el =>
+    el.type !== 'lang' ? true : job.languages.includes(el.value),
+  )
 
-const hasToolFn = (job, filterKind) =>
-  filterKind === 'tool+'
-    ? filterState.every(el => job.tools.includes(el.value))
-    : filterState.some(el => job.tools.includes(el.value))
-
+const hasToolFn = job =>
+  filterState.every(el =>
+    el.type !== 'tool' ? true : job.tools.includes(el.value),
+  )
 const hasRoleFn = job => filterState.some(el => el.value === job.role)
