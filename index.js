@@ -26,7 +26,7 @@ const createJobCard = () => {
             ${job.new ? '<span class="newTag">NEW!</span>' : ''}
             ${job.featured ? '<span class="featuredTag">FEATURED</span>' : ''}
           </div>
-          <h3 class="title">${job.position}</h3>
+          <h2 class="title">${job.position}</h2>
           <div class="detailsBox">
             <div class="time">${job.postedAt}</div>
             <div>•</div>
