@@ -208,6 +208,7 @@ body {
   color: #7c8f8f;
   background-color: white;
   font-family: 'Spartan';
+  cursor: pointer;
 }
 
 .clearBtn:hover {
@@ -282,6 +283,7 @@ body {
 
   #jobs {
     row-gap: 38px;
+    padding-top: 44px;
   }
 
   .lineDiv {
