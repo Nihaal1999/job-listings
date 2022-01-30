@@ -19,7 +19,7 @@ const createJobCard = () => {
       }
       cardTemplate += `<div class="job ${job.featured ? 'leftBorder' : ''}">
       <div class="leftFlex">
-        <img src=${job.logo} alt="job" class="jobImage" />
+        <img src=${job.logo} alt=${job.company + ' image'} class="jobImage" />
         <div class="info">
           <div class="companyBox">
             <h4 class="companyName">${job.company}</h4>
@@ -36,6 +36,7 @@ const createJobCard = () => {
           </div>
         </div>
       </div>
+      <div class="lineDiv"></div>
       <div class="filters">
       ${createFilters({
         role: job.role,
@@ -45,7 +46,6 @@ const createJobCard = () => {
       </div>
     </div>`
     }
-    // console.log(cardTemplate)
     jobContainer.innerHTML = cardTemplate
   })
 }

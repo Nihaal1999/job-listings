@@ -44,7 +44,7 @@ body {
   gap: 24px;
   padding: 76px 0;
   background-color: var(--primary);
-  height: 100%;
+  min-height: 100%;
 }
 
 .leftFlex {
@@ -168,8 +168,9 @@ body {
 }
 
 .searchBox {
-  width: 1110px;
-  height: 72px;
+  max-width: 1110px;
+  width: 85%;
+  /* height: 72px; */
   z-index: 1;
   position: absolute;
   bottom: -35px;
@@ -180,7 +181,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  animation: 5s ease-in;
+}
+
+.hide {
+  visibility: hidden;
 }
 
 .job,
@@ -211,17 +215,94 @@ body {
   text-decoration: underline;
 }
 
-.hide {
-  visibility: hidden;
-  transition: visibility 0s linear 300ms, opacity 300ms;
-}
-
 .leftBorder {
   border-left: solid 5px var(--header);
+}
+
+.lineDiv {
+  visibility: hidden;
 }
 
 @media (max-width: 1005px) {
   .job {
     flex-direction: column;
+    width: auto;
+  }
+  .filter {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .job {
+    width: 90%;
+    margin: 0 24px;
+  }
+  .filter {
+    margin-top: 0px;
+  }
+  .title {
+    font-size: 15px;
+  }
+  .companyName {
+    font-size: 13px;
+  }
+  .detailsBox {
+    font-size: 13px;
+  }
+  .filters {
+    flex-wrap: wrap;
+    row-gap: 16px;
+  }
+  .filter {
+    font-size: 13px;
+  }
+
+  .job {
+    position: relative;
+    padding: 32px 24px 24px 24px;
+  }
+
+  .jobImage {
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    top: -24px;
+    left: 24px;
+  }
+
+  .leftFlex {
+    justify-content: flex-start;
+  }
+
+  .filters {
+    justify-content: flex-start;
+    margin-top: 16px;
+  }
+
+  #jobs {
+    row-gap: 38px;
+  }
+
+  .lineDiv {
+    visibility: visible;
+    width: 100%;
+    border: 0.1px solid #b7c4c4;
+    margin-top: 16px;
+    opacity: 0.3;
+  }
+
+  .searchBox {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .selectedFilter {
+    font-size: 13px;
+  }
+
+  .selectedFiltersBox {
+    flex-wrap: wrap;
+    row-gap: 16px;
   }
 }
