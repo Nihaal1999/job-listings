@@ -23,8 +23,8 @@ const createJobCard = () => {
         <div class="info">
           <div class="companyBox">
             <h4 class="companyName">${job.company}</h4>
-            ${job.new ? '<span class="newTag">new!</span>' : ''}
-            ${job.featured ? '<span class="featuredTag">featured</span>' : ''}
+            ${job.new ? '<span class="newTag">NEW!</span>' : ''}
+            ${job.featured ? '<span class="featuredTag">FEATURED</span>' : ''}
           </div>
           <h3 class="title">${job.position}</h3>
           <div class="detailsBox">
